@@ -4,22 +4,12 @@
 
 
 using namespace std;
-// Displays the table on the screen
-void OutputTable(char table[], const int grid);
 
-// Manage user's input
-void Input(char table[], const int grid, int& index, int& jndex, char xo);
-
-// Determines the end of the game
-bool GameOver(char table[], char xo);
-
-//Displays the menu
+void OutputBoard(char board[5][5]);
+void Input(char board[5][5],  int& index, int& jndex, char xo);
+bool GameOver(char board[5][5], char xo);
 int Menu();
-
-// Displays the  Control tutorial
 void ControlTutorial();
-
-// Game process
 void Setup();
 
 
@@ -78,32 +68,32 @@ void Setup()
 	// Sets the starting character 
 	char xo = 'O';
 
-	const int grid = 5;
-	char table[grid][grid];
+	
+	char board[5][5];
 
-	// Creat table
-	for (int i = 0; i < grid; i++)
+	// Creat board
+	for (int i = 0; i < 5; i++)
 	{
-		for (int j = 0; j < grid; j++)
+		for (int j = 0; j < 5; j++)
 		{
 			if (j == 1 || j == 3)
 			{
-				table[i][j] = '|';
+				board[i][j] = '|';
 				continue;
 			}
 
 			if (i == 1 || i == 3)
 			{
-				table[i][j] = '-';
+				board[i][j] = '-';
 				continue;
 			}
 
-			table[i][j] = ' ';
+			board[i][j] = ' ';
 		}
 	}
 
 	// Beginning of the game
-	while (!(endGame = GameOver(reinterpret_cast<char*>(table), xo)) && move != 9)
+	while (!(endGame = GameOver(board, xo)) && move != 9)
 	{
 		// Players change, player X always goes first
 		if (xo == 'X')
@@ -112,13 +102,13 @@ void Setup()
 		}
 		else xo = 'X';
 
-		Input(reinterpret_cast<char*>(table), grid, index, jndex, xo);
+		Input(board, index, jndex, xo);
 
 		move++;
 
 	}
 
-	OutputTable(reinterpret_cast<char*>(table), grid);
+	OutputBoard(board);
 
 	if (endGame)
 	{
@@ -136,59 +126,59 @@ void Setup()
 }
 
 // Displays the table on the screen
-void OutputTable(char table[], const int grid)
+void OutputBoard(char board[5][5])
 {
-	for (int i = 0; i < grid; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		for (int j = 0; j < grid; j++)
+		for (int j = 0; j < 5; j++)
 		{
-			cout << table[i * grid + j];
+			cout << board[i][j];
 		}
 		cout << endl;
 	}
 }
 
 // Manage user's input
-void Input(char table[], const int grid, int& index, int& jndex, char xo) {
+void Input(char board[5][5], int& index, int& jndex, char xo) {
 
 	// The symbol that you press to move the X or O
-	char press;
+	char press_key;
 
 	do
 	{
-		OutputTable(table, grid);
+		OutputBoard(board);
 
 		// Cycle for flashing symbol
 		while (!_kbhit())
 		{
 			system("cls");
 
-			if (table[index * grid + jndex] == xo)
-				table[index * grid + jndex] = ' ';
-			else table[index * grid + jndex] = xo;
+			if (board[index][jndex] == xo)
+				board[index][jndex] = ' ';
+			else board[index][jndex] = xo;
 
-			OutputTable(table, grid);
+			OutputBoard(board);
 
 			Sleep(150);
 		}
 
-		press = _getch();
+		press_key = _getch();
 
 		system("cls");
 
 		// Put symbol 
-		if (press == 'f' || press == 'F')
+		if (press_key == 'f' || press_key == 'F')
 		{
-			table[index * grid + jndex] = xo;
-			for (int i = 0; i < grid; i++)
+			board[index][jndex] = xo;
+			for (int i = 0; i < 5; i++)
 			{
-				for (int j = 0; j < grid; j++)
+				for (int j = 0; j < 5; j++)
 				{
-					if (table[i * grid + j] == ' ')
+					if (board[i][j] == ' ')
 					{
 						index = i;
 						jndex = j;
-						i = grid;
+						i = 5;
 						break;
 					}
 				}
@@ -196,10 +186,10 @@ void Input(char table[], const int grid, int& index, int& jndex, char xo) {
 		}
 
 		// Move Down
-		if (press == 's' || press == 'S')
+		if (press_key == 's' || press_key == 'S')
 		{
 			//Set space to the current position where was the symbol
-			table[index * grid + jndex] = ' ';
+			board[index][jndex] = ' ';
 
 			// Checking if a symbol is on a last row
 			if (index == 4)
@@ -216,7 +206,7 @@ void Input(char table[], const int grid, int& index, int& jndex, char xo) {
 			int count = 0;
 
 			// Finding a free array cell
-			while (table[i * grid + j] != ' ')
+			while (board[i][j] != ' ')
 			{
 				//If we are in the last row we are moving to the next column
 				if (i == 4)
@@ -245,13 +235,13 @@ void Input(char table[], const int grid, int& index, int& jndex, char xo) {
 			//Sets the symbol position
 			index = i;
 			jndex = j;
-			table[index * grid + jndex] = xo;
+			board[index][jndex] = xo;
 		}
 
 		// Move Up
-		if (press == 'w' || press == 'W')
+		if (press_key == 'w' || press_key == 'W')
 		{
-			table[index * grid + jndex] = ' ';
+			board[index][jndex] = ' ';
 
 			if (index == 0)
 			{
@@ -262,7 +252,7 @@ void Input(char table[], const int grid, int& index, int& jndex, char xo) {
 			int j = jndex;
 			int count = 0;
 
-			while (table[i * grid + j] != ' ')
+			while (board[i][j] != ' ')
 			{
 				if (i == 0)
 				{
@@ -287,13 +277,13 @@ void Input(char table[], const int grid, int& index, int& jndex, char xo) {
 
 			index = i;
 			jndex = j;
-			table[index * grid + jndex] = xo;
+			board[index][jndex] = xo;
 		}
 
 		// Move Right
-		if (press == 'd' || press == 'D')
+		if (press_key == 'd' || press_key == 'D')
 		{
-			table[index * grid + jndex] = ' ';
+			board[index][jndex] = ' ';
 
 			if (jndex == 4)
 			{
@@ -304,7 +294,7 @@ void Input(char table[], const int grid, int& index, int& jndex, char xo) {
 			int j = jndex + 2;
 			int count = 0;
 
-			while (table[i * grid + j] != ' ')
+			while (board[i][j] != ' ')
 			{
 				if (j == 4)
 				{
@@ -329,23 +319,24 @@ void Input(char table[], const int grid, int& index, int& jndex, char xo) {
 
 			index = i;
 			jndex = j;
-			table[index * grid + jndex] = xo;
+			board[index][jndex] = xo;
 		}
 
 		// Move left
-		if (press == 'a' || press == 'A')
+		if (press_key == 'a' || press_key == 'A')
 		{
-			table[index * grid + jndex] = ' ';
+			board[index][jndex] = ' ';
 			if (jndex == 0)
 			{
 				jndex += 2;
 			}
+
 			int i = index;
 			int j = jndex - 2;
 
 			int count = 0;
 
-			while (table[i * grid + j] != ' ')
+			while (board[i][j] != ' ')
 			{
 				if (j == 0)
 				{
@@ -358,60 +349,64 @@ void Input(char table[], const int grid, int& index, int& jndex, char xo) {
 					count++;
 					j = jndex;
 				}
+
 				if (count == 3)
 				{
 					i = index;
 					j = jndex;
 					break;
 				}
+
 				j -= 2;
 
 			}
 
 			index = i;
 			jndex = j;
-			table[index * grid + jndex] = xo;
+			board[index][jndex] = xo;
 		}
-	} while ((press != 'f' && press != 'F'));
+	} while ((press_key != 'f' && press_key != 'F'));
 
 }
 
 // Determines the end of the game
-bool GameOver(char table[], char xo)
+bool GameOver(char board[5][5], char xo)
 {
-	for (int i = 0; i < 5; i += 2)
+	for (int i = 0; i < 2; i += 2)
 	{
-		for (int j = 0; j < 2; j += 2)
+		for (int j = 0; j < 5; j += 2)
 		{
-			if (table[i * 5] == xo && table[i * 5 + 2] == xo && table[i * 5 + 4] == xo)
+			if (board[i][j] == xo && board[i + 2][j] == xo && board[i + 4][j] == xo)
 			{
-				table[i * 5] = '+';
-				table[i * 5 + 2] = '+';
-				table[i * 5 + 4] = '+';
+				board[i][j] = '+';
+				board[i + 2][j] = '+';
+				board[i + 4][j] = '+';
 				return true;
 			}
-			if (table[0 + i] == xo && table[10 + i] == xo && table[20 + i] == xo)
+			
+			if (board[j][i] == xo && board[j][i + 2] == xo && board[j][i + 4] == xo)
 			{
-				table[0 + i] = '+';
-				table[10 + i] = '+';
-				table[20 + i] = '+';
+				board[j][i] = '+';
+				board[j][i + 2] = '+';
+				board[j][i + 4] = '+';
 				return true;
 			}
 		}
 	}
 
-	if ((table[0] == xo && table[12] == xo) && table[24] == xo)
+	if ((board[0][0] == xo && board[2][2] == xo) && board[4][4] == xo)
 	{
-		table[0] = '+';
-		table[12] = '+';
-		table[24] = '+';
+		board[0][0] = '+';
+		board[2][2] = '+';
+		board[4][4] = '+';
 		return  true;
 	}
-	if ((table[4] == xo && table[12] == xo) && table[20] == xo)
+	
+	if ((board[0][4] == xo && board[2][2] == xo) && board[4][0] == xo)
 	{
-		table[4] = '+';
-		table[12] = '+';
-		table[20] = '+';
+		board[0][4] = '+';
+		board[2][2] = '+';
+		board[4][0] = '+';
 		return true;
 	}
 
