@@ -5,12 +5,12 @@
 
 using namespace std;
 
-void OutputBoard(char board[5][5]);
-void Input(char board[5][5],  int& index, int& jndex, char xo);
-bool GameOver(char board[5][5], char xo);
-int Menu();
-void ControlTutorial();
-void Setup();
+void OutputBoard(char board[5][5]);// Displays the table on the screen
+void Input(char board[5][5],  int& index, int& jndex, char xo);// Manage user's input
+bool GameOver(char board[5][5], char xo);// Determines the end of the game
+int Menu(); //Displays the menu
+void ControlTutorial();// Displays the  Control tutorial
+void Setup();// Game process
 
 
 
@@ -52,7 +52,7 @@ int main()
 }
 
 
-// Game process
+
 void Setup()
 {
 	bool endGame = false;
@@ -125,7 +125,7 @@ void Setup()
 
 }
 
-// Displays the table on the screen
+
 void OutputBoard(char board[5][5])
 {
 	for (int i = 0; i < 5; i++)
@@ -138,7 +138,7 @@ void OutputBoard(char board[5][5])
 	}
 }
 
-// Manage user's input
+
 void Input(char board[5][5], int& index, int& jndex, char xo) {
 
 	// The symbol that you press to move the X or O
@@ -369,7 +369,7 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 
 }
 
-// Determines the end of the game
+
 bool GameOver(char board[5][5], char xo)
 {
 	for (int i = 0; i < 2; i += 2)
@@ -413,7 +413,6 @@ bool GameOver(char board[5][5], char xo)
 	return false;
 }
 
-//Displays the menu
 int Menu()
 {
 	int a;
@@ -428,7 +427,7 @@ int Menu()
 	return a;
 }
 
-// Displays the  Control tutorial
+
 void ControlTutorial()
 {
 	system("cls");
