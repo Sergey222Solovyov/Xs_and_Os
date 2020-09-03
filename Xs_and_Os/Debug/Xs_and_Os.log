@@ -1,6 +1,2 @@
 ﻿  Source.cpp
-D:\c\projects\Xs_and_Os\Xs_and_Os\Source.cpp(590,54): error C2660:  'Minimax': function does not take 5 arguments
-D:\c\projects\Xs_and_Os\Xs_and_Os\Source.cpp(19,5): message :  see declaration of 'Minimax'
-D:\c\projects\Xs_and_Os\Xs_and_Os\Source.cpp(601,5): error C2059:  syntax error: '}'
-D:\c\projects\Xs_and_Os\Xs_and_Os\Source.cpp(602,4): error C2059:  syntax error: '}'
-D:\c\projects\Xs_and_Os\Xs_and_Os\Source.cpp(603,3): error C2059:  syntax error: '}'
+  Xs_and_Os.vcxproj -> D:\c\projects\Xs_and_Os\Debug\Xs_and_Os.exe

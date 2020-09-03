@@ -16,7 +16,7 @@ void SearchEmptyCell(char board[5][5], int& index, int& jndex); //Search and put
 bool IsMovesLeft(char board[5][5]);
 int Evaluate(char board[5][5], char ai, char player);// Based on Minimax Algorithm 
 													// this function defines value for maximizer (In our case maximizer is AI)
-int Minimax(char board[5][5], char ai, char player, int moves, bool isMax, int& index, int& jndex);
+int Minimax(char board[5][5], char ai, char player, int moves, bool isMax);
 
 
 void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex, int moves);
@@ -32,13 +32,13 @@ int main()
 		{
 		case '1':
 
-			Setup();
+			SetupWith_AI();
 
 			break;
 
 		case '2':
 
-			SetupWith_AI();
+			Setup();
 
 			break;
 
@@ -200,17 +200,6 @@ void SetupWith_AI()
 		}
 	}
 
-	
-	board[0][0] = 'O';
-	board[2][2] = 'X';
-	board[0][4] = 'X';
-	//board[4][2] = 'O';
-	//board[2][2] = 'X';
-	//board[2][0] = 'X';
-	turn = false;
-	moves = 3;
-	SearchEmptyCell(board, index, jndex);
-	
 
 	// Beginning of the game
 	do
@@ -259,8 +248,8 @@ int Menu()
 	int pressKey;
 
 	cout << "Start menu: ";
-	cout << endl << "1. Play vs friend.";
-	cout << endl << "2. Play vs computer.";
+	cout << endl << "1. Play vs computer.";
+	cout << endl << "2. Play vs friend.";
 	cout << endl << "3. Exit." << endl;
 	cout << endl;
 	cout << "----------------------------------------------------------" << endl;
@@ -569,11 +558,11 @@ void SearchEmptyCell(char board[5][5], int& index, int& jndex)
 
 };
 
-/*
+
 void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
  {
 	int bestVal = -1000;
-	int moveVal = 0;
+	int moveVal = -1000;
 	       // Traverse all cells, evaluate minimax function for
 		       // all empty cells. And return the cell with optimal
 		       // value.
@@ -581,17 +570,22 @@ void FindBestPosition(char board[5][5], char ai, char player, int& index, int& j
 		{
 			for (int j = 0; j <= 4; j += 2)
 			{
-			                       // Check if cell is empty
-				                       // Make the move
+			    // Check if cell is empty
+				// Make the move
 				if (board[i][j] == ' ')
 				{
-				                               // compute evaluation function for this
-					                              // move.
-					moveVal = Minimax(board, ai, player, moves, true);
+					board[i][j] = ai;
+					
+					// compute evaluation function for this move. 
+					moveVal = Minimax(board, ai, player, moves + 1, false);
+
+					// Undo the move
+					board[i][j] = ' ';
 				}
-			               // If the value of the current move is
-				               // more than the best value, then update
-				               // best/
+
+			    // If the value of the current move	
+				// more than the best value, then update
+				// best/
 				if (moveVal > bestVal)
 				{
 				index = i;
@@ -601,7 +595,7 @@ void FindBestPosition(char board[5][5], char ai, char player, int& index, int& j
 			}
 		}
 }
-*/
+
 
 
 int Evaluate(char board[5][5], char ai, char player)
@@ -654,7 +648,7 @@ int Evaluate(char board[5][5], char ai, char player)
 	return 0;
 }
 
-int Minimax(char board[5][5], char ai, char player, int moves, bool isMax, int& index, int& jndex)
+int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 {
 	
 	int score = Evaluate(board, ai, player);
@@ -690,17 +684,13 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax, int& 
 			
 					// Call minimax recursively and choose 
 					// the maximum value 
-					best = max(best, Minimax(board, ai, player, moves + 1, !isMax, index, jndex)) - moves;
+					best = max(best, Minimax(board, ai, player, moves + 1, !isMax)) - moves;
 
 					// Undo the move 
 					board[i][j] = ' ';
-					// If the value of the current move is 
-					// more than the best value, then update 
-					// best
+					
 					if (best > bestVal)
 					{
-						index = i;
-						jndex = j;
 						bestVal = best;
 						best = -1000;
 					}
@@ -725,13 +715,14 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax, int& 
 				{
 					// Make the move 
 					board[i][j] = player;
+
 					// Call minimax recursively and choose 
 					// the minimum value 
-					best = min(best, Minimax(board, ai, player, moves + 1, !isMax, index, jndex)) + moves;
+					best = min(best, Minimax(board, ai, player, moves + 1, !isMax)) + moves;
 
 					// Undo the move 
 					board[i][j] = ' ';
-					
+
 					if (best < bestVal)
 					{
 						bestVal = best;
@@ -747,7 +738,12 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax, int& 
 
 void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
 {
-	Minimax(board, ai, player, moves, true, index, jndex);
+	if(moves == 0)
+	{
+		system("cls");
+		cout << "AI is thinking...";
+	}
+	FindBestPosition(board, ai, player, index, jndex, moves);
 	board[index][jndex] = ai;
 	SearchEmptyCell(board, index, jndex);
 }
