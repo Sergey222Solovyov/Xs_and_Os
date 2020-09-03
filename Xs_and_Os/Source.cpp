@@ -6,7 +6,7 @@
 using namespace std;
 
 void OutputBoard(char board[5][5]); // Displays the board on the screen
-void Input(char board[5][5],  int& index, int& jndex, char xo); // Manage user's input
+void Input(char board[5][5], int& index, int& jndex, char xo); // Manage user's input
 bool Winner(char board[5][5], char xo);// Determines the winner 
 int Menu(); //Displays the menu
 void ControlTutorial(); // Displays the  Control tutorial
@@ -17,9 +17,9 @@ void SearchEmptyCell(char board[5][5], int& index, int& jndex); //Search and put
 bool IsMovesLeft(char board[5][5]);
 int Evaluate(char board[5][5], char ai, char player);// Based on Minimax Algorithm 
 													// this function defines value for maximizer (In our case maximizer is AI)
-int Minimax(char board[5][5], char ai, char player, int depth, bool isMax);
+int Minimax(char board[5][5], char ai, char player, int moves, bool isMax);
 
-void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex ,int moves);
+void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex, int moves);
 
 
 int main()
@@ -31,15 +31,15 @@ int main()
 
 		switch (Menu())
 		{
-			case '1':
-				
-				Setup();
+		case '1':
+
+			Setup();
 
 			break;
 
 		case '2':
 
-				SetupWith_AI();
+			SetupWith_AI();
 
 			break;
 
@@ -53,7 +53,7 @@ int main()
 
 			break;
 		}
-		
+
 		_getch();
 
 		system("cls");
@@ -77,7 +77,7 @@ void Setup()
 	// Sets the starting character 
 	char xo = 'O';
 
-	
+
 	char board[5][5];
 
 	// Creat board
@@ -130,23 +130,20 @@ void Setup()
 
 void SetupWith_AI()
 {
-	
+	char board[5][5];
 	int a;
 	char xo = ' '; //  Determines whose symbol to check
 	bool endGame = false;
 	char player = ' ';
 	char ai = ' ';
 	bool turn = false; // Determines whose move, if true it is a person
-
-	
 	int index = 0;// The Indexes indicates the location of the X or O
 	int jndex = 0;	// index indicates row on the grid, jndex - column
-
 	int moves = 0; // Counts how many moves was made
 
-	
 
-	do 
+
+	do
 	{
 		system("cls");
 		cout << "Select X or 0" << endl;
@@ -180,8 +177,8 @@ void SetupWith_AI()
 		}
 
 	} while (player == ' ');
+
 	
-	char board[5][5];
 
 	// Create board
 	for (int i = 0; i < 5; i++)
@@ -204,16 +201,25 @@ void SetupWith_AI()
 		}
 	}
 
+
+	board[0][0] = 'X';
+	board[0][2] = 'O';
+	board[0][4] = 'X';
+	board[4][2] = 'O';
+	board[2][4] = 'X';
+	board[2][0] = 'O';
+	moves = 6;
+	SearchEmptyCell(board, index, jndex);
 	// Beginning of the game
-	do 
+	do
 	{
-		if (turn) 
+		if (turn)
 		{
 			Input(board, index, jndex, player);
 			turn = false;
 			xo = player;
-		} 
-		else 
+		}
+		else
 		{
 			AImove(board, ai, player, index, jndex, moves);
 			turn = true;
@@ -306,7 +312,7 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 			{
 				//If we are in the last row we are moving to the next column
 				if (i == 4)
-				{	
+				{
 					//If we are in the last column we are moving to the first column
 					if (j == 4)
 					{
@@ -478,7 +484,7 @@ bool Winner(char board[5][5], char xo)
 				board[i + 4][j] = '+';
 				return true;
 			}
-			
+
 			if (board[j][i] == xo && board[j][i + 2] == xo && board[j][i + 4] == xo)
 			{
 				board[j][i] = '+';
@@ -496,7 +502,7 @@ bool Winner(char board[5][5], char xo)
 		board[4][4] = '+';
 		return  true;
 	}
-	
+
 	if ((board[0][4] == xo && board[2][2] == xo) && board[4][0] == xo)
 	{
 		board[0][4] = '+';
@@ -508,7 +514,7 @@ bool Winner(char board[5][5], char xo)
 	return false;
 }
 
-void SearchEmptyCell(char board[5][5], int& index, int& jndex) 
+void SearchEmptyCell(char board[5][5], int& index, int& jndex)
 {
 	for (int i = 0; i <= 4; i += 2)
 	{
@@ -551,7 +557,7 @@ void ControlTutorial()
 	cout << endl << "       'S' to move DOWN ";
 	cout << endl << endl << "To put symbol use: 'F'. " << endl << endl;
 	cout << "Use the english layout." << endl << endl;
-	
+
 }
 
 bool IsMovesLeft(char board[5][5])
@@ -562,7 +568,6 @@ bool IsMovesLeft(char board[5][5])
 				return true;
 	return false;
 }
- 
 
 
 
@@ -575,20 +580,20 @@ int Evaluate(char board[5][5], char ai, char player)
 		{
 			if (board[i][j] == ai && board[i + 2][j] == ai && board[i + 4][j] == ai)
 			{
-				return + 10;
-			} 
+				return +10;
+			}
 			else if (board[i][j] == player && board[i + 2][j] == player && board[i + 4][j] == player)
 			{
-				return - 10;
+				return -10;
 			}
 
 			if (board[j][i] == ai && board[j][i + 2] == ai && board[j][i + 4] == ai)
 			{
-				return + 10;
+				return +10;
 			}
 			else if (board[j][i] == player && board[j][i + 2] == player && board[j][i + 4] == player)
 			{
-				return - 10;
+				return -10;
 			}
 
 		}
@@ -596,22 +601,22 @@ int Evaluate(char board[5][5], char ai, char player)
 
 	if ((board[0][0] == ai && board[2][2] == ai) && board[4][4] == ai)
 	{
-		return + 10;
+		return +10;
 	}
 
 	if ((board[0][0] == player && board[2][2] == player) && board[4][4] == player)
 	{
-		return - 10;
+		return -10;
 	}
 
 	if ((board[0][4] == ai && board[2][2] == ai) && board[4][0] == ai)
 	{
-		return + 10;
+		return +10;
 	}
 
 	if ((board[0][4] == player && board[2][2] == player) && board[4][0] == player)
 	{
-		return - 10;
+		return -10;
 	}
 
 	return 0;
@@ -621,9 +626,8 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 {
 
 	int score = Evaluate(board, ai, player);
-
 	// If Maximizer has won the game return his
-   // evaluated score 
+	 // evaluated score 
 	if (score == 10)
 		return score;
 
@@ -651,18 +655,17 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 				{
 					// Make the move 
 					board[i][j] = ai;
-					OutputBoard(board);
-					_getch();
-					cout << endl;
+			
 					// Call minimax recursively and choose 
 					// the maximum value 
-					best = max(best, Minimax(board, ai, player, moves + 1, !isMax));
+					best = max(best, Minimax(board, ai, player, moves + 1, !isMax)) - moves;
 
 					// Undo the move 
 					board[i][j] = ' ';
 				}
 			}
 		}
+
 		return best;
 	}
 
@@ -681,16 +684,16 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 				{
 					// Make the move 
 					board[i][j] = player;
-
 					// Call minimax recursively and choose 
 					// the minimum value 
-					best = min(best, Minimax(board, ai, player, moves + 1, !isMax));
+					best = min(best, Minimax(board, ai, player, moves + 1, !isMax)) + moves;
 
 					// Undo the move 
 					board[i][j] = ' ';
 				}
 			}
 		}
+
 		return best;
 	}
 
@@ -699,7 +702,7 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
 {
 	int bestVal = -1000;
-
+	int moveVal = 0;
 	// Traverse all cells, evaluate minimax function for 
 	// all empty cells. And return the cell with optimal 
 	// value. 
@@ -708,37 +711,29 @@ void FindBestPosition(char board[5][5], char ai, char player, int& index, int& j
 		for (int j = 0; j <= 4; j += 2)
 		{
 			// Check if cell is empty 
-				// Make the move 
-				
-				
+			// Make the move 
+			if (board[i][j] == ' ')
+			{
 				// compute evaluation function for this 
 				// move. 
-				int moveVal = Minimax(board, ai, player, moves, true);
-
-				// Undo the move 
-				board[i][j] = ' ';
-
-				// If the value of the current move is 
-				// more than the best value, then update 
-				// best/ 
-				if (moveVal > bestVal)
-				{
-					index = i;
-					jndex = j;
-					bestVal = moveVal;
-				}
-			
+				moveVal = Minimax(board, ai, player, moves, true);
+			}
+		// If the value of the current move is 
+		// more than the best value, then update 
+		// best/ 
+			if (moveVal > bestVal)
+			{
+				index = i;
+				jndex = j;
+				bestVal = moveVal;
+			}
 		}
 	}
-
-
-	
 }
 
 void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
 {
-
 	FindBestPosition(board, ai, player, index, jndex, moves);
 	board[index][jndex] = ai;
 	SearchEmptyCell(board, index, jndex);
-};
+}
