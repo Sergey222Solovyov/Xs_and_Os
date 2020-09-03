@@ -12,14 +12,14 @@ int Menu(); //Displays the menu
 void ControlTutorial(); // Displays the  Control tutorial
 void Setup(); // Game process
 void SetupWith_AI(); // Game process vs AI
-void AImove(char board[5][5], char ai, char player, int& index, int& jndex); // Logic for the AI
+void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves); // Logic for the AI
 void SearchEmptyCell(char board[5][5], int& index, int& jndex); //Search and put indices in empty cell in array
 bool IsMovesLeft(char board[5][5]);
 int Evaluate(char board[5][5], char ai, char player);// Based on Minimax Algorithm 
 													// this function defines value for maximizer (In our case maximizer is AI)
 int Minimax(char board[5][5], char ai, char player, int depth, bool isMax);
 
-void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex);
+void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex ,int moves);
 
 
 int main()
@@ -142,7 +142,7 @@ void SetupWith_AI()
 	int index = 0;// The Indexes indicates the location of the X or O
 	int jndex = 0;	// index indicates row on the grid, jndex - column
 
-	int move = 0; // Counts how many moves was made
+	int moves = 0; // Counts how many moves was made
 
 	
 
@@ -215,13 +215,13 @@ void SetupWith_AI()
 		} 
 		else 
 		{
-			AImove(board, ai, player, index, jndex);
+			AImove(board, ai, player, index, jndex, moves);
 			turn = true;
 			xo = ai;
 		}
 
-		move++;
-	} while (!(endGame = Winner(board, xo)) && move != 9);
+		moves++;
+	} while (!(endGame = Winner(board, xo)) && moves != 9);
 
 	OutputBoard(board);
 
@@ -696,7 +696,7 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 
 }
 
-void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex)
+void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
 {
 	int bestVal = -1000;
 
@@ -710,11 +710,10 @@ void FindBestPosition(char board[5][5], char ai, char player, int& index, int& j
 			// Check if cell is empty 
 				// Make the move 
 				
-				OutputBoard(board);
-				_getch();
+				
 				// compute evaluation function for this 
 				// move. 
-				int moveVal = Minimax(board, ai, player, 0, true);
+				int moveVal = Minimax(board, ai, player, moves, true);
 
 				// Undo the move 
 				board[i][j] = ' ';
@@ -736,10 +735,10 @@ void FindBestPosition(char board[5][5], char ai, char player, int& index, int& j
 	
 }
 
-void AImove(char board[5][5], char ai, char player, int& index, int& jndex)
+void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
 {
 
-	FindBestPosition(board, ai, player, index, jndex);
+	FindBestPosition(board, ai, player, index, jndex, moves);
 	board[index][jndex] = ai;
 	SearchEmptyCell(board, index, jndex);
 };
