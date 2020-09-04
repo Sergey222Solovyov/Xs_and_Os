@@ -5,32 +5,40 @@
 
 using namespace std;
 
-<<<<<<< HEAD
-void OutputBoard(char board[5][5]);// Displays the table on the screen
-void Input(char board[5][5],  int& index, int& jndex, char xo);// Manage user's input
-bool GameOver(char board[5][5], char xo);// Determines the end of the game
-int Menu(); //Displays the menu
-void ControlTutorial();// Displays the  Control tutorial
-void Setup();// Game process
+// Displays the board on the screen
+void OutputBoard(char board[5][5]); 
 
+// Manage user's input
+void Input(char board[5][5], int& index, int& jndex, char xo); 
 
-=======
-void OutputBoard(char board[5][5]); // Displays the board on the screen
-void Input(char board[5][5], int& index, int& jndex, char xo); // Manage user's input
-bool Winner(char board[5][5], char xo);// Determines the winner 
-int Menu(); //Displays the menu
-void Setup(); // Game process
-void SetupWith_AI(); // Game process vs AI
-void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves); // Logic for the AI
-void SearchEmptyCell(char board[5][5], int& index, int& jndex); //Search and put indices in empty cell in array
+// Determines the winner 
+bool Winner(char board[5][5], char xo);
+
+//Displays the menu
+int Menu(); 
+
+// Game process
+void Setup(); 
+
+// Game process vs AI
+void SetupWith_AI(); 
+
+// Logic for the AI
+void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves);
+
+//Search and put indices in empty cell in array
+void SearchEmptyCell(char board[5][5], int& index, int& jndex);
+
+//Check if moves left
 bool IsMovesLeft(char board[5][5]);
-int Evaluate(char board[5][5], char ai, char player);// Based on Minimax Algorithm 
-													// this function defines value for maximizer (In our case maximizer is AI)
+
+// Based on Minimax Algorithm this function defines value for maximizer (In our case maximizer is AI)
+int Evaluate(char board[5][5], char ai, char player);
+													
 int Minimax(char board[5][5], char ai, char player, int moves, bool isMax);
 
-
 void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex, int moves);
->>>>>>> add-featureAI
+
 
 int main()
 {
@@ -69,6 +77,8 @@ int main()
 		system("cls");
 	}
 }
+
+
 
 
 
@@ -240,11 +250,6 @@ void SetupWith_AI()
 	else cout << endl << "It's a draw! ";
 
 }
-
-<<<<<<< HEAD
-
-=======
->>>>>>> add-featureAI
 void OutputBoard(char board[5][5])
 {
 	for (int i = 0; i < 5; i++)
@@ -257,9 +262,6 @@ void OutputBoard(char board[5][5])
 	}
 }
 
-
-<<<<<<< HEAD
-=======
 int Menu()
 {
 	int pressKey;
@@ -292,9 +294,6 @@ bool IsMovesLeft(char board[5][5])
 	return false;
 }
 
-
-
->>>>>>> add-featureAI
 void Input(char board[5][5], int& index, int& jndex, char xo) {
 
 	// The symbol that you press to move the X or O
@@ -515,12 +514,8 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 
 }
 
-<<<<<<< HEAD
-
-bool GameOver(char board[5][5], char xo)
-=======
 bool Winner(char board[5][5], char xo)
->>>>>>> add-featureAI
+
 {
 	for (int i = 0; i < 2; i += 2)
 	{
@@ -563,11 +558,8 @@ bool Winner(char board[5][5], char xo)
 	return false;
 }
 
-<<<<<<< HEAD
-int Menu()
-=======
 void SearchEmptyCell(char board[5][5], int& index, int& jndex)
->>>>>>> add-featureAI
+
 {
 	for (int i = 0; i <= 4; i += 2)
 	{
@@ -584,7 +576,6 @@ void SearchEmptyCell(char board[5][5], int& index, int& jndex)
 	}
 
 };
-
 
 void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
  {
@@ -623,13 +614,8 @@ void FindBestPosition(char board[5][5], char ai, char player, int& index, int& j
 		}
 }
 
-
-<<<<<<< HEAD
-void ControlTutorial()
-=======
-
 int Evaluate(char board[5][5], char ai, char player)
->>>>>>> add-featureAI
+
 {
 	for (int i = 0; i < 2; i += 2)
 	{
