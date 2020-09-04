@@ -32,11 +32,15 @@ void SearchEmptyCell(char board[5][5], int& index, int& jndex);
 //Check if moves left
 bool IsMovesLeft(char board[5][5]);
 
-// Based on Minimax Algorithm this function defines value for maximizer (In our case maximizer is AI)
+// Based on Minimax Algorithm this function defines value for maximizer and minimizer 
 int Evaluate(char board[5][5], char ai, char player);
-													
+
+// This is the minimax function. It considers all 
+// the possible ways the game can go and returns 
+// the value of the board 
 int Minimax(char board[5][5], char ai, char player, int moves, bool isMax);
 
+// This will return the best possible move for the AI
 void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex, int moves);
 
 
@@ -153,15 +157,34 @@ void SetupWith_AI()
 	char board[5][5];
 	int a;
 	char xo = ' '; //  Determines whose symbol to check
-	bool endGame = false;
+	bool endGame = false; 
 	char player = ' ';
 	char ai = ' ';
-	bool turn = false; // Determines whose move, if true it is a person
+	bool turn = true; // Determines whose move, if true it is a person
 	int index = 0;// The Indexes indicates the location of the X or O
-	int jndex = 0;	// index indicates row on the grid, jndex - column
+	int jndex = 0;	// index indicates row on the board, jndex - column
 	int moves = 0; // Counts how many moves was made
+	
+	// Create board
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if (j == 1 || j == 3)
+			{
+				board[i][j] = '|';
+				continue;
+			}
 
+			if (i == 1 || i == 3)
+			{
+				board[i][j] = '-';
+				continue;
+			}
 
+			board[i][j] = ' ';
+		}
+	}
 
 	do
 	{
@@ -184,7 +207,10 @@ void SetupWith_AI()
 
 			player = 'O';
 			ai = 'X';
-			turn = false;
+
+			// Set initial position for AI, no matter what his first move is.
+			board[2][2] = ai;
+			moves++;
 			break;
 
 		default:
@@ -197,29 +223,6 @@ void SetupWith_AI()
 		}
 
 	} while (player == ' ');
-
-	
-
-	// Create board
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 5; j++)
-		{
-			if (j == 1 || j == 3)
-			{
-				board[i][j] = '|';
-				continue;
-			}
-
-			if (i == 1 || i == 3)
-			{
-				board[i][j] = '-';
-				continue;
-			}
-
-			board[i][j] = ' ';
-		}
-	}
 
 
 	// Beginning of the game
@@ -250,6 +253,7 @@ void SetupWith_AI()
 	else cout << endl << "It's a draw! ";
 
 }
+
 void OutputBoard(char board[5][5])
 {
 	for (int i = 0; i < 5; i++)
@@ -336,7 +340,7 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 			//Set space to the current position where was the symbol
 			board[index][jndex] = ' ';
 
-			// Checking if a symbol is on a last row
+			// Checking if a symbol is in a last row
 			if (index == 4)
 			{
 				index -= 2;
@@ -360,8 +364,7 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 					if (j == 4)
 					{
 						j = 0;
-					}
-					else  j += 2;
+					} else  j += 2;
 
 					count++;
 					i = index;
@@ -389,9 +392,8 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 			board[index][jndex] = ' ';
 
 			if (index == 0)
-			{
 				index += 2;
-			}
+		
 
 			int i = index - 2;
 			int j = jndex;
@@ -404,8 +406,7 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 					if (j == 4)
 					{
 						j = 0;
-					}
-					else j += 2;
+					} else j += 2;
 
 					count++;
 					i = index;
@@ -431,9 +432,8 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 			board[index][jndex] = ' ';
 
 			if (jndex == 4)
-			{
 				jndex -= 2;
-			}
+		
 
 			int i = index;
 			int j = jndex + 2;
@@ -446,8 +446,7 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 					if (i == 4)
 					{
 						i = 0;
-					}
-					else i += 2;
+					} else i += 2;
 
 					count++;
 					j = jndex;
@@ -488,8 +487,7 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 					if (i == 4)
 					{
 						i = 0;
-					}
-					else i += 2;
+					} else i += 2;
 
 					count++;
 					j = jndex;
@@ -515,8 +513,8 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 }
 
 bool Winner(char board[5][5], char xo)
-
 {
+	// Checking for Rows and Columns for X or O victory. 
 	for (int i = 0; i < 2; i += 2)
 	{
 		for (int j = 0; j < 5; j += 2)
@@ -539,6 +537,7 @@ bool Winner(char board[5][5], char xo)
 		}
 	}
 
+	// Checking for Diagonals for X or O victory. 
 	if ((board[0][0] == xo && board[2][2] == xo) && board[4][4] == xo)
 	{
 		board[0][0] = '+';
@@ -581,9 +580,10 @@ void FindBestPosition(char board[5][5], char ai, char player, int& index, int& j
  {
 	int bestVal = -1000;
 	int moveVal = -1000;
-	       // Traverse all cells, evaluate minimax function for
-		       // all empty cells. And return the cell with optimal
-		       // value.
+	    
+		// Traverse all cells, evaluate minimax function for
+		// all empty cells. And return the cell with optimal
+		// value.
 		for (int i = 0; i <= 4; i += 2)
 		{
 			for (int j = 0; j <= 4; j += 2)
@@ -615,8 +615,8 @@ void FindBestPosition(char board[5][5], char ai, char player, int& index, int& j
 }
 
 int Evaluate(char board[5][5], char ai, char player)
-
 {
+	// Checking for Rows and Columns for X or O victory. 
 	for (int i = 0; i < 2; i += 2)
 	{
 		for (int j = 0; j < 5; j += 2)
@@ -641,7 +641,8 @@ int Evaluate(char board[5][5], char ai, char player)
 
 		}
 	}
-
+	
+	// Checking for Diagonals for X or O victory. 
 	if ((board[0][0] == ai && board[2][2] == ai) && board[4][4] == ai)
 	{
 		return + 10;
@@ -755,11 +756,6 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 
 void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
 {
-	if(moves == 0)
-	{
-		system("cls");
-		cout << "AI is thinking...";
-	}
 	FindBestPosition(board, ai, player, index, jndex, moves);
 	board[index][jndex] = ai;
 	SearchEmptyCell(board, index, jndex);
