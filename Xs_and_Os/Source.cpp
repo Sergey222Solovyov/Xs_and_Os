@@ -5,32 +5,26 @@
 
 using namespace std;
 
+//Displays the menu
+int Menu();
+
+// Game process 
+void Setup(int mode);
+
 // Displays the board on the screen
 void OutputBoard(char board[5][5]); 
-
-// Manage user's input
-void Input(char board[5][5], int& index, int& jndex, char xo); 
-
-// Determines the winner 
-bool Winner(char board[5][5], char xo);
-
-//Displays the menu
-int Menu(); 
-
-// Game process
-void Setup(); 
-
-// Game process vs AI
-void SetupWith_AI(); 
-
-// Logic for the AI
-void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves);
 
 //Search and put indices in empty cell in array
 void SearchEmptyCell(char board[5][5], int& index, int& jndex);
 
 //Check if moves left
 bool IsMovesLeft(char board[5][5]);
+
+// Manage user's input
+void Input(char board[5][5], int& index, int& jndex, char xo); 
+
+// Manage AI's input
+void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves);
 
 // Based on Minimax Algorithm this function defines value for maximizer and minimizer 
 int Evaluate(char board[5][5], char ai, char player);
@@ -43,7 +37,6 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax);
 // This will return the best possible move for the AI
 void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex, int moves);
 
-
 int main()
 {
 
@@ -55,13 +48,13 @@ int main()
 		{
 		case '1':
 
-			SetupWith_AI();
+			Setup(1);
 
 			break;
 
 		case '2':
 
-			Setup();
+			Setup(0);
 
 			break;
 
@@ -79,190 +72,6 @@ int main()
 		_getch();
 
 		system("cls");
-	}
-}
-
-
-
-
-
-void Setup()
-{
-	bool endGame = false;
-
-	// The Indexes indicates the location of the X or O
-	// index indicates row on the grid, jndex - column
-	int index = 0;
-	int jndex = 0;
-
-	// Counts how many moves was made
-	int move = 0;
-
-	// Sets the starting character 
-	char xo = 'O';
-
-
-	char board[5][5];
-
-	// Creat board
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 5; j++)
-		{
-			if (j == 1 || j == 3)
-			{
-				board[i][j] = '|';
-				continue;
-			}
-
-			if (i == 1 || i == 3)
-			{
-				board[i][j] = '-';
-				continue;
-			}
-
-			board[i][j] = ' ';
-		}
-	}
-
-	// Beginning of the game
-	while (!(endGame = Winner(board, xo)) && move != 9)
-	{
-		// Players change, player X always goes first
-		if (xo == 'X')
-		{
-			xo = 'O';
-		}
-		else xo = 'X';
-
-		Input(board, index, jndex, xo);
-
-		move++;
-
-	}
-
-	OutputBoard(board);
-
-	if (endGame)
-	{
-		cout << endl << "Player '" << xo << "'  win the game!";
-	}
-	else cout << endl << "It's a draw! ";
-
-	// After the end of the session, everything is reset
-}
-
-void SetupWith_AI()
-{
-	char board[5][5];
-	int a;
-	char xo = ' '; //  Determines whose symbol to check
-	bool endGame = false; 
-	char player = ' ';
-	char ai = ' ';
-	bool turn = true; // Determines whose move, if true it is a person
-	int index = 0;// The Indexes indicates the location of the X or O
-	int jndex = 0;	// index indicates row on the board, jndex - column
-	int moves = 0; // Counts how many moves was made
-	
-	// Create board
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 5; j++)
-		{
-			if (j == 1 || j == 3)
-			{
-				board[i][j] = '|';
-				continue;
-			}
-
-			if (i == 1 || i == 3)
-			{
-				board[i][j] = '-';
-				continue;
-			}
-
-			board[i][j] = ' ';
-		}
-	}
-
-	do
-	{
-		system("cls");
-		cout << "Select X or 0" << endl;
-		cout << "1. X" << endl;
-		cout << "2. O" << endl;
-
-		a = _getch();
-		switch (a)
-		{
-		case '1':
-
-			player = 'X';
-			ai = 'O';
-			turn = true;
-			break;
-
-		case '2':
-
-			player = 'O';
-			ai = 'X';
-
-			// Set initial position for AI, no matter what his first move is.
-			board[2][2] = ai;
-			moves++;
-			break;
-
-		default:
-
-			cout << "Incorrect input." << endl << "Press any key to continue...";
-			_getch();
-			system("cls");
-
-			break;
-		}
-
-	} while (player == ' ');
-
-
-	// Beginning of the game
-	do
-	{
-		if (turn)
-		{
-			Input(board, index, jndex, player);
-			turn = false;
-			xo = player;
-		}
-		else
-		{
-			AImove(board, ai, player, index, jndex, moves);
-			turn = true;
-			xo = ai;
-		}
-
-		moves++;
-	} while (!(endGame = Winner(board, xo)) && moves != 9);
-
-	OutputBoard(board);
-
-	if (endGame)
-	{
-		cout << endl << "Player '" << xo << "'  win the game!";
-	}
-	else cout << endl << "It's a draw! ";
-
-}
-
-void OutputBoard(char board[5][5])
-{
-	for (int i = 0; i < 5; i++)
-	{
-		for (int j = 0; j < 5; j++)
-		{
-			cout << board[i][j];
-		}
-		cout << endl;
 	}
 }
 
@@ -288,6 +97,162 @@ int Menu()
 
 	return pressKey;
 }
+
+void Setup(int mode)
+{
+	// The Indexes indicates the location of the X or O
+	// index indicates row on the grid, jndex - column
+	int index = 0;
+	int jndex = 0;
+
+	int move = 0;// Counts how many moves was made
+	
+	char board[5][5]; //Initialization of the game board
+	
+	int press; // The variable in which the key pressed by the user will be stored
+
+	char xo = 'O'; //  Determines whose symbol to check
+	char player = 'O'; // Symbol for player 
+	char ai = 'O'; // Symbol for AI
+	bool turn = true; // Determines whose move, if true it is a player 
+	
+	int moves = 0; // Counts how many moves was made
+	
+	// Create board
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			if (j == 1 || j == 3)
+			{
+				board[i][j] = '|';
+				continue;
+			}
+
+			if (i == 1 || i == 3)
+			{
+				board[i][j] = '-';
+				continue;
+			}
+
+			board[i][j] = ' ';
+		}
+	}
+	// Check what game mode is select if mode = 1 game with computer else with person.
+	if (mode == 1)
+	{
+		do
+		{
+			system("cls");
+			cout << "Select X or 0" << endl;
+			cout << "1. X" << endl;
+			cout << "2. O" << endl;
+
+			press = _getch();
+			switch (press)
+			{
+			case '1':
+
+				player = 'X';
+				ai = 'O';
+				turn = true;
+				break;
+
+			case '2':
+
+				player = 'O';
+				ai = 'X';
+
+				// Set initial position for AI, no matter what his first move is.
+				board[2][2] = ai;
+				moves++;
+				break;
+
+			default:
+
+				cout << "Incorrect input." << endl << "Press any key to continue...";
+				_getch();
+				system("cls");
+
+				break;
+			}
+
+		} while (player == ' ');
+
+		// Beginning of the game
+		do
+		{
+			if (turn)
+			{
+				Input(board, index, jndex, player);
+				turn = false;
+				xo = player;
+			}
+			else
+			{
+				AImove(board, ai, player, index, jndex, moves);
+				turn = true;
+				xo = ai;
+			}
+
+			moves++;
+		} while (Evaluate(board, ai, player) == 0 && moves != 9);
+
+	} 
+	else
+	{
+		while (Evaluate(board, xo, player) == 0 && move != 9)
+		{
+			// Players change, player X always goes first
+			if (xo == 'X')
+				xo = 'O';
+			else xo = 'X';
+
+			Input(board, index, jndex, xo);
+
+			move++;
+		}
+		player = xo;
+	}
+
+	OutputBoard(board);
+
+	if (Evaluate(board, ai, player) != 0)
+		cout << endl << "Player '" << xo << "'  win the game!";
+	else cout << endl << "It's a draw! ";
+
+}
+
+void OutputBoard(char board[5][5])
+{
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			cout << board[i][j];
+		}
+		cout << endl;
+	}
+}
+
+void SearchEmptyCell(char board[5][5], int& index, int& jndex)
+
+{
+	for (int i = 0; i <= 4; i += 2)
+	{
+		for (int j = 0; j <= 4; j += 2)
+		{
+			if (board[i][j] == ' ')
+			{
+				index = i;
+				jndex = j;
+				i = 5;
+				break;
+			}
+		}
+	}
+
+};
 
 bool IsMovesLeft(char board[5][5])
 {
@@ -512,69 +477,12 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 
 }
 
-bool Winner(char board[5][5], char xo)
+void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
 {
-	// Checking for Rows and Columns for X or O victory. 
-	for (int i = 0; i < 2; i += 2)
-	{
-		for (int j = 0; j < 5; j += 2)
-		{
-			if (board[i][j] == xo && board[i + 2][j] == xo && board[i + 4][j] == xo)
-			{
-				board[i][j] = '+';
-				board[i + 2][j] = '+';
-				board[i + 4][j] = '+';
-				return true;
-			}
-
-			if (board[j][i] == xo && board[j][i + 2] == xo && board[j][i + 4] == xo)
-			{
-				board[j][i] = '+';
-				board[j][i + 2] = '+';
-				board[j][i + 4] = '+';
-				return true;
-			}
-		}
-	}
-
-	// Checking for Diagonals for X or O victory. 
-	if ((board[0][0] == xo && board[2][2] == xo) && board[4][4] == xo)
-	{
-		board[0][0] = '+';
-		board[2][2] = '+';
-		board[4][4] = '+';
-		return  true;
-	}
-
-	if ((board[0][4] == xo && board[2][2] == xo) && board[4][0] == xo)
-	{
-		board[0][4] = '+';
-		board[2][2] = '+';
-		board[4][0] = '+';
-		return true;
-	}
-
-	return false;
+	FindBestPosition(board, ai, player, index, jndex, moves);
+	board[index][jndex] = ai;
+	SearchEmptyCell(board, index, jndex);
 }
-
-void SearchEmptyCell(char board[5][5], int& index, int& jndex)
-
-{
-	for (int i = 0; i <= 4; i += 2)
-	{
-		for (int j = 0; j <= 4; j += 2)
-		{
-			if (board[i][j] == ' ')
-			{
-				index = i;
-				jndex = j;
-				i = 5;
-				break;
-			}
-		}
-	}
-
-};
 
 void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
  {
@@ -594,7 +502,7 @@ void FindBestPosition(char board[5][5], char ai, char player, int& index, int& j
 				{
 					board[i][j] = ai;
 					
-					// compute evaluation function for this move. 
+					// Compute evaluation function for this move. 
 					moveVal = Minimax(board, ai, player, moves + 1, false);
 
 					// Undo the move
@@ -603,7 +511,7 @@ void FindBestPosition(char board[5][5], char ai, char player, int& index, int& j
 
 			    // If the value of the current move	
 				// more than the best value, then update
-				// best/
+				// best
 				if (moveVal > bestVal)
 				{
 				index = i;
@@ -685,6 +593,7 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 	if (IsMovesLeft(board) == false)
 		return 0;
 
+	// If isMax is true then it is the Maximizer move
 	if (isMax)
 	{
 		int best = -1000;
@@ -754,9 +663,3 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 
 }
 
-void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
-{
-	FindBestPosition(board, ai, player, index, jndex, moves);
-	board[index][jndex] = ai;
-	SearchEmptyCell(board, index, jndex);
-}
