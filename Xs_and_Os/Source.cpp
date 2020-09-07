@@ -15,16 +15,16 @@ void Setup(int mode);
 void OutputBoard(char board[5][5]); 
 
 //Search and put indices in empty cell in array
-void SearchEmptyCell(char board[5][5], int& index, int& jndex);
+void SearchEmptyCell(char board[5][5], int& row, int& column);
 
 //Check if moves left
 bool IsMovesLeft(char board[5][5]);
 
 // Manage user's input
-void Input(char board[5][5], int& index, int& jndex, char xo); 
+void Input(char board[5][5], int& row, int& column, char xo); 
 
 // Manage AI's input
-void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves);
+void AImove(char board[5][5], char ai, char player, int& row, int& column, int moves);
 
 // Based on Minimax Algorithm this function defines value for maximizer and minimizer 
 int Evaluate(char board[5][5], char ai, char player);
@@ -35,7 +35,7 @@ int Evaluate(char board[5][5], char ai, char player);
 int Minimax(char board[5][5], char ai, char player, int moves, bool isMax);
 
 // This will return the best possible move for the AI
-void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex, int moves);
+void FindBestPosition(char board[5][5], char ai, char player, int& row, int& column, int moves);
 
 int main()
 {
@@ -100,10 +100,9 @@ int Menu()
 
 void Setup(int mode)
 {
-	// The Indexes indicates the location of the X or O
-	// index indicates row on the grid, jndex - column
-	int index = 0;
-	int jndex = 0;
+	
+	int row = 0;
+	int column = 0;
 
 	int move = 0;// Counts how many moves was made
 	
@@ -184,13 +183,13 @@ void Setup(int mode)
 		{
 			if (turn)
 			{
-				Input(board, index, jndex, player);
+				Input(board, row, column, player);
 				turn = false;
 				xo = player;
 			}
 			else
 			{
-				AImove(board, ai, player, index, jndex, moves);
+				AImove(board, ai, player, row, column, moves);
 				turn = true;
 				xo = ai;
 			}
@@ -208,7 +207,7 @@ void Setup(int mode)
 				xo = 'O';
 			else xo = 'X';
 
-			Input(board, index, jndex, xo);
+			Input(board, row, column, xo);
 
 			move++;
 		}
@@ -235,7 +234,7 @@ void OutputBoard(char board[5][5])
 	}
 }
 
-void SearchEmptyCell(char board[5][5], int& index, int& jndex)
+void SearchEmptyCell(char board[5][5], int& row, int& column)
 
 {
 	for (int i = 0; i <= 4; i += 2)
@@ -244,8 +243,8 @@ void SearchEmptyCell(char board[5][5], int& index, int& jndex)
 		{
 			if (board[i][j] == ' ')
 			{
-				index = i;
-				jndex = j;
+				row = i;
+				column = j;
 				i = 5;
 				break;
 			}
@@ -263,9 +262,9 @@ bool IsMovesLeft(char board[5][5])
 	return false;
 }
 
-void Input(char board[5][5], int& index, int& jndex, char xo) {
+void Input(char board[5][5], int& row, int& column, char xo) {
 
-	// The symbol that you press to move the X or O
+	
 	char press_key;
 
 	do
@@ -277,9 +276,9 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 		{
 			system("cls");
 
-			if (board[index][jndex] == xo)
-				board[index][jndex] = ' ';
-			else board[index][jndex] = xo;
+			if (board[row][column] == xo)
+				board[row][column] = ' ';
+			else board[row][column] = xo;
 
 			OutputBoard(board);
 
@@ -293,28 +292,28 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 		// Put symbol 
 		if (press_key == 'f' || press_key == 'F')
 		{
-			board[index][jndex] = xo;
+			board[row][column] = xo;
 
 			//Setting a new position 
-			SearchEmptyCell(board, index, jndex);
+			SearchEmptyCell(board, row, column);
 		}
 
 		// Move Down
 		if (press_key == 's' || press_key == 'S')
 		{
 			//Set space to the current position where was the symbol
-			board[index][jndex] = ' ';
+			board[row][column] = ' ';
 
 			// Checking if a symbol is in a last row
-			if (index == 4)
+			if (row == 4)
 			{
-				index -= 2;
+				row -= 2;
 			}
 
 			// If not we are moving symbol by two rows down
 			// Two rows because in a two - dimensional array some cells contain parts of the grid
-			int i = index + 2;
-			int j = jndex;
+			int i = row + 2;
+			int j = column;
 
 			//Variable count - counts how many columns(or rows) were checked
 			int count = 0;
@@ -332,13 +331,13 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 					} else  j += 2;
 
 					count++;
-					i = index;
+					i = row;
 				}
 				// If all columns (or rows) have been checked, the cycle ends
 				if (count == 3)
 				{
-					i = index;
-					j = jndex;
+					i = row;
+					j = column;
 					break;
 				}
 
@@ -346,22 +345,22 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 			}
 
 			//Sets the symbol position
-			index = i;
-			jndex = j;
-			board[index][jndex] = xo;
+			row = i;
+			column = j;
+			board[row][column] = xo;
 		}
 
 		// Move Up
 		if (press_key == 'w' || press_key == 'W')
 		{
-			board[index][jndex] = ' ';
+			board[row][column] = ' ';
 
-			if (index == 0)
-				index += 2;
+			if (row == 0)
+				row += 2;
 		
 
-			int i = index - 2;
-			int j = jndex;
+			int i = row - 2;
+			int j = column;
 			int count = 0;
 
 			while (board[i][j] != ' ')
@@ -374,34 +373,34 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 					} else j += 2;
 
 					count++;
-					i = index;
+					i = row;
 				}
 				if (count == 3)
 				{
-					i = index;
-					j = jndex;
+					i = row;
+					j = column;
 					break;
 				}
 				i -= 2;
 
 			}
 
-			index = i;
-			jndex = j;
-			board[index][jndex] = xo;
+			row = i;
+			column = j;
+			board[row][column] = xo;
 		}
 
 		// Move Right
 		if (press_key == 'd' || press_key == 'D')
 		{
-			board[index][jndex] = ' ';
+			board[row][column] = ' ';
 
-			if (jndex == 4)
-				jndex -= 2;
+			if (column == 4)
+				column -= 2;
 		
 
-			int i = index;
-			int j = jndex + 2;
+			int i = row;
+			int j = column + 2;
 			int count = 0;
 
 			while (board[i][j] != ' ')
@@ -414,34 +413,34 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 					} else i += 2;
 
 					count++;
-					j = jndex;
+					j = column;
 				}
 
 				if (count == 3)
 				{
-					i = index;
-					j = jndex;
+					i = row;
+					j = column;
 					break;
 				}
 				j += 2;
 			}
 
-			index = i;
-			jndex = j;
-			board[index][jndex] = xo;
+			row = i;
+			column = j;
+			board[row][column] = xo;
 		}
 
 		// Move left
 		if (press_key == 'a' || press_key == 'A')
 		{
-			board[index][jndex] = ' ';
-			if (jndex == 0)
+			board[row][column] = ' ';
+			if (column == 0)
 			{
-				jndex += 2;
+				column += 2;
 			}
 
-			int i = index;
-			int j = jndex - 2;
+			int i = row;
+			int j = column - 2;
 
 			int count = 0;
 
@@ -455,13 +454,13 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 					} else i += 2;
 
 					count++;
-					j = jndex;
+					j = column;
 				}
 
 				if (count == 3)
 				{
-					i = index;
-					j = jndex;
+					i = row;
+					j = column;
 					break;
 				}
 
@@ -469,22 +468,22 @@ void Input(char board[5][5], int& index, int& jndex, char xo) {
 
 			}
 
-			index = i;
-			jndex = j;
-			board[index][jndex] = xo;
+			row = i;
+			column = j;
+			board[row][column] = xo;
 		}
 	} while ((press_key != 'f' && press_key != 'F'));
 
 }
 
-void AImove(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
+void AImove(char board[5][5], char ai, char player, int& row, int& column, int moves)
 {
-	FindBestPosition(board, ai, player, index, jndex, moves);
-	board[index][jndex] = ai;
-	SearchEmptyCell(board, index, jndex);
+	FindBestPosition(board, ai, player, row, column, moves);
+	board[row][column] = ai;
+	SearchEmptyCell(board, row, column);
 }
 
-void FindBestPosition(char board[5][5], char ai, char player, int& index, int& jndex, int moves)
+void FindBestPosition(char board[5][5], char ai, char player, int& row, int& column, int moves)
  {
 	int bestVal = -1000;
 	int moveVal = -1000;
@@ -514,8 +513,8 @@ void FindBestPosition(char board[5][5], char ai, char player, int& index, int& j
 				// best
 				if (moveVal > bestVal)
 				{
-				index = i;
-				jndex = j;
+				row = i;
+				column = j;
 				bestVal = moveVal;
 				}
 			}
