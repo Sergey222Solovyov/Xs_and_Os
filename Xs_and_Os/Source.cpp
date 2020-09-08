@@ -77,7 +77,7 @@ int main()
 
 int Menu()
 {
-	int pressKey;
+	int press_key;
 
 	cout << "Start menu: ";
 	cout << endl << "1. Play vs computer.";
@@ -93,9 +93,9 @@ int Menu()
 	cout << endl << endl << "To put symbol use: 'F'. " << endl << endl;
 	cout << "Use the english layout." << endl << endl;
 
-	pressKey = _getch();
+	press_key = _getch();
 
-	return pressKey;
+	return press_key;
 }
 
 void Setup(int mode)
@@ -104,18 +104,16 @@ void Setup(int mode)
 	int row = 0;
 	int column = 0;
 
-	int move = 0;// Counts how many moves was made
+	char board[5][5]; 
 	
-	char board[5][5]; //Initialization of the game board
-	
-	int press; // The variable in which the key pressed by the user will be stored
+	int press_key; // The variable in which the key pressed by the user will be stored
 
 	char xo = 'O'; //  Determines whose symbol to check
 	char player = 'O'; // Symbol for player 
 	char ai = 'O'; // Symbol for AI
 	bool turn = true; // Determines whose move, if true it is a player 
 	
-	int moves = 0; // Counts how many moves was made
+	int moves = 0;
 	
 	// Create board
 	for (int i = 0; i < 5; i++)
@@ -147,8 +145,8 @@ void Setup(int mode)
 			cout << "1. X" << endl;
 			cout << "2. O" << endl;
 
-			press = _getch();
-			switch (press)
+			press_key = _getch();
+			switch (press_key)
 			{
 			case '1':
 
@@ -200,7 +198,7 @@ void Setup(int mode)
 	} 
 	else
 	{
-		while (Evaluate(board, xo, player) == 0 && move != 9)
+		while (Evaluate(board, xo, player) == 0 && moves != 9)
 		{
 			// Players change, player X always goes first
 			if (xo == 'X')
@@ -209,7 +207,7 @@ void Setup(int mode)
 
 			Input(board, row, column, xo);
 
-			move++;
+			moves++;
 		}
 		player = xo;
 	}
