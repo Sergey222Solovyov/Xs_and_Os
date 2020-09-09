@@ -6,36 +6,36 @@
 using namespace std;
 
 //Displays the menu
-int Menu();
+int menu();
 
 // Game process 
-void Setup(int mode);
+void setup(int mode);
 
 // Displays the board on the screen
-void OutputBoard(char board[5][5]); 
+void outputBoard(char board[5][5]); 
 
 //Search and put indices in empty cell in array
-void SearchEmptyCell(char board[5][5], int& row, int& column);
+void searchEmptyCell(char board[5][5], int& row, int& column);
 
 //Check if moves left
-bool IsMovesLeft(char board[5][5]);
+bool isMovesLeft(char board[5][5]);
 
 // Manage user's input
-void Input(char board[5][5], int& row, int& column, char xo); 
+void input(char board[5][5], int& row, int& column, char xo); 
 
 // Manage AI's input
-void AImove(char board[5][5], char ai, char player, int& row, int& column, int moves);
+void aiMove(char board[5][5], char ai, char player, int& row, int& column, int moves);
 
 // Based on Minimax Algorithm this function defines value for maximizer and minimizer 
-int Evaluate(char board[5][5], char ai, char player);
+int evaluate(char board[5][5], char ai, char player);
 
 // This is the minimax function. It considers all 
 // the possible ways the game can go and returns 
 // the value of the board 
-int Minimax(char board[5][5], char ai, char player, int moves, bool isMax);
+int minimax(char board[5][5], char ai, char player, int moves, bool isMax);
 
 // This will return the best possible move for the AI
-void FindBestPosition(char board[5][5], char ai, char player, int& row, int& column, int moves);
+void findBestPosition(char board[5][5], char ai, char player, int& row, int& column, int moves);
 
 int main()
 {
@@ -44,17 +44,17 @@ int main()
 	{
 		system("cls");
 
-		switch (Menu())
+		switch (menu())
 		{
 		case '1':
 
-			Setup(1);
+			setup(1);
 
 			break;
 
 		case '2':
 
-			Setup(0);
+			setup(0);
 
 			break;
 
@@ -75,7 +75,7 @@ int main()
 	}
 }
 
-int Menu()
+int menu()
 {
 	int press_key;
 
@@ -98,7 +98,7 @@ int Menu()
 	return press_key;
 }
 
-void Setup(int mode)
+void setup(int mode)
 {
 	
 	int row = 0;
@@ -181,46 +181,46 @@ void Setup(int mode)
 		{
 			if (turn)
 			{
-				Input(board, row, column, player);
+				input(board, row, column, player);
 				turn = false;
 				xo = player;
 			}
 			else
 			{
-				AImove(board, ai, player, row, column, moves);
+				aiMove(board, ai, player, row, column, moves);
 				turn = true;
 				xo = ai;
 			}
 
 			moves++;
-		} while (Evaluate(board, ai, player) == 0 && moves != 9);
+		} while (evaluate(board, ai, player) == 0 && moves != 9);
 
 	} 
 	else
 	{
-		while (Evaluate(board, xo, player) == 0 && moves != 9)
+		while (evaluate(board, xo, player) == 0 && moves != 9)
 		{
 			// Players change, player X always goes first
 			if (xo == 'X')
 				xo = 'O';
 			else xo = 'X';
 
-			Input(board, row, column, xo);
+			input(board, row, column, xo);
 
 			moves++;
 		}
 		player = xo;
 	}
 
-	OutputBoard(board);
+	outputBoard(board);
 
-	if (Evaluate(board, ai, player) != 0)
+	if (evaluate(board, ai, player) != 0)
 		cout << endl << "Player '" << xo << "'  win the game!";
 	else cout << endl << "It's a draw! ";
 
 }
 
-void OutputBoard(char board[5][5])
+void outputBoard(char board[5][5])
 {
 	for (int i = 0; i < 5; i++)
 	{
@@ -232,8 +232,7 @@ void OutputBoard(char board[5][5])
 	}
 }
 
-void SearchEmptyCell(char board[5][5], int& row, int& column)
-
+void searchEmptyCell(char board[5][5], int& row, int& column)
 {
 	for (int i = 0; i <= 4; i += 2)
 	{
@@ -251,7 +250,7 @@ void SearchEmptyCell(char board[5][5], int& row, int& column)
 
 };
 
-bool IsMovesLeft(char board[5][5])
+bool isMovesLeft(char board[5][5])
 {
 	for (int i = 0; i <= 4; i += 2)
 		for (int j = 0; j <= 4; j += 2)
@@ -260,14 +259,13 @@ bool IsMovesLeft(char board[5][5])
 	return false;
 }
 
-void Input(char board[5][5], int& row, int& column, char xo) {
-
-	
+void input(char board[5][5], int& row, int& column, char xo) 
+{
 	char press_key;
 
 	do
 	{
-		OutputBoard(board);
+		outputBoard(board);
 
 		// Cycle for flashing symbol
 		while (!_kbhit())
@@ -278,7 +276,7 @@ void Input(char board[5][5], int& row, int& column, char xo) {
 				board[row][column] = ' ';
 			else board[row][column] = xo;
 
-			OutputBoard(board);
+			outputBoard(board);
 
 			Sleep(150);
 		}
@@ -293,7 +291,7 @@ void Input(char board[5][5], int& row, int& column, char xo) {
 			board[row][column] = xo;
 
 			//Setting a new position 
-			SearchEmptyCell(board, row, column);
+			searchEmptyCell(board, row, column);
 		}
 
 		// Move Down
@@ -396,7 +394,6 @@ void Input(char board[5][5], int& row, int& column, char xo) {
 			if (column == 4)
 				column -= 2;
 		
-
 			int i = row;
 			int j = column + 2;
 			int count = 0;
@@ -474,14 +471,14 @@ void Input(char board[5][5], int& row, int& column, char xo) {
 
 }
 
-void AImove(char board[5][5], char ai, char player, int& row, int& column, int moves)
+void aiMove(char board[5][5], char ai, char player, int& row, int& column, int moves)
 {
-	FindBestPosition(board, ai, player, row, column, moves);
+	findBestPosition(board, ai, player, row, column, moves);
 	board[row][column] = ai;
-	SearchEmptyCell(board, row, column);
+	searchEmptyCell(board, row, column);
 }
 
-void FindBestPosition(char board[5][5], char ai, char player, int& row, int& column, int moves)
+void findBestPosition(char board[5][5], char ai, char player, int& row, int& column, int moves)
  {
 	int bestVal = -1000;
 	int moveVal = -1000;
@@ -500,7 +497,7 @@ void FindBestPosition(char board[5][5], char ai, char player, int& row, int& col
 					board[i][j] = ai;
 					
 					// Compute evaluation function for this move. 
-					moveVal = Minimax(board, ai, player, moves + 1, false);
+					moveVal =minimax(board, ai, player, moves + 1, false);
 
 					// Undo the move
 					board[i][j] = ' ';
@@ -519,7 +516,7 @@ void FindBestPosition(char board[5][5], char ai, char player, int& row, int& col
 		}
 }
 
-int Evaluate(char board[5][5], char ai, char player)
+int evaluate(char board[5][5], char ai, char player)
 {
 	// Checking for Rows and Columns for X or O victory. 
 	for (int i = 0; i < 2; i += 2)
@@ -571,10 +568,9 @@ int Evaluate(char board[5][5], char ai, char player)
 	return 0;
 }
 
-int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
+int minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 {
-	
-	int score = Evaluate(board, ai, player);
+	int score = evaluate(board, ai, player);
 	// If Maximizer has won the game return his
 	 // evaluated score 
 	if (score == 10)
@@ -587,7 +583,7 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 
 	// If there are no more moves and no winner then 
 	// it is a tie 
-	if (IsMovesLeft(board) == false)
+	if (isMovesLeft(board) == false)
 		return 0;
 
 	// If isMax is true then it is the Maximizer move
@@ -608,7 +604,7 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 			
 					// Call minimax recursively and choose 
 					// the maximum value 
-					best = max(best, Minimax(board, ai, player, moves + 1, !isMax)) - moves;
+					best = max(best, minimax(board, ai, player, moves + 1, !isMax)) - moves;
 
 					// Undo the move 
 					board[i][j] = ' ';
@@ -642,7 +638,7 @@ int Minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 
 					// Call minimax recursively and choose 
 					// the minimum value 
-					best = min(best, Minimax(board, ai, player, moves + 1, !isMax)) + moves;
+					best = min(best, minimax(board, ai, player, moves + 1, !isMax)) + moves;
 
 					// Undo the move 
 					board[i][j] = ' ';
