@@ -10,7 +10,7 @@ In Minimax the two players are called maximizer and minimizer. The maximizer t
 
 # How is it implemented in my project 
 
-Firs of all we have a function evaluate. The basic idea behind the evaluation function is to give a high value for a board if maximizer‘s turn or a low value for the board if minimizer‘s turn. For example let us consider X as the maximizer and O as the minimizer. If X wins on the board we give it a positive value of +10 If O wins it a negative value of -10. and value of +0 in case of a draw. 
+First of all we have a function evaluate(). The basic idea behind the evaluation function is to give a high value for a board if maximizer‘s turn or a low value for the board if minimizer‘s turn. For example let us consider X as the maximizer and O as the minimizer. If X wins on the board we give it a positive value of +10 If O wins it a negative value of -10. And value of +0 in case of a draw. 
 
 To check whether or not the current move is better than the best move we take the help of minimax() function which will consider all the possible ways the game can go and returns the best value for that move.
 
