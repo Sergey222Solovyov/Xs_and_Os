@@ -11,30 +11,27 @@ int menu();
 // Game process 
 void setup(int mode);
 
-// Displays the board on the screen
+
 void outputBoard(char board[5][5]); 
 
-//Search and put indices in empty cell in array
 void searchEmptyCell(char board[5][5], int& row, int& column);
 
-//Check if moves left
+
 bool isMovesLeft(char board[5][5]);
 
-// Manage user's input
+
 void input(char board[5][5], int& row, int& column, char xo); 
 
-// Manage AI's input
+
 void aiMove(char board[5][5], char ai, char player, int& row, int& column, int moves);
 
-// Based on Minimax Algorithm this function defines value for maximizer and minimizer 
+
 int evaluate(char board[5][5], char ai, char player);
 
-// This is the minimax function. It considers all 
-// the possible ways the game can go and returns 
-// the value of the board 
+
 int minimax(char board[5][5], char ai, char player, int moves, bool isMax);
 
-// This will return the best possible move for the AI
+
 void findBestPosition(char board[5][5], char ai, char player, int& row, int& column, int moves);
 
 int main()
@@ -74,7 +71,7 @@ int main()
 		system("cls");
 	}
 }
-
+//Displays the menu
 int menu()
 {
 	int press_key;
@@ -97,7 +94,7 @@ int menu()
 
 	return press_key;
 }
-
+// Game process
 void setup(int mode)
 {
 	
@@ -109,7 +106,7 @@ void setup(int mode)
 	int press_key; // The variable in which the key pressed by the user will be stored
 
 	char xo = 'O'; //  Determines whose symbol to check
-	char player = 'O'; // Symbol for player 
+	char player = ' '; // Symbol for player 
 	char ai = 'O'; // Symbol for AI
 	bool turn = true; // Determines whose move, if true it is a player 
 	
@@ -198,7 +195,7 @@ void setup(int mode)
 	} 
 	else
 	{
-		while (evaluate(board, xo, player) == 0 && moves != 9)
+		while (evaluate(board, xo, player = 'X') == 0 && moves != 9)
 		{
 			// Players change, player X always goes first
 			if (xo == 'X')
@@ -219,7 +216,7 @@ void setup(int mode)
 	else cout << endl << "It's a draw! ";
 
 }
-
+// Displays the board on the screen
 void outputBoard(char board[5][5])
 {
 	for (int i = 0; i < 5; i++)
@@ -231,7 +228,7 @@ void outputBoard(char board[5][5])
 		cout << endl;
 	}
 }
-
+//Search and put indices in empty cell in array
 void searchEmptyCell(char board[5][5], int& row, int& column)
 {
 	for (int i = 0; i <= 4; i += 2)
@@ -249,7 +246,7 @@ void searchEmptyCell(char board[5][5], int& row, int& column)
 	}
 
 };
-
+//Check if moves left
 bool isMovesLeft(char board[5][5])
 {
 	for (int i = 0; i <= 4; i += 2)
@@ -258,7 +255,7 @@ bool isMovesLeft(char board[5][5])
 				return true;
 	return false;
 }
-
+// Manage user's input
 void input(char board[5][5], int& row, int& column, char xo) 
 {
 	char press_key;
@@ -470,14 +467,14 @@ void input(char board[5][5], int& row, int& column, char xo)
 	} while ((press_key != 'f' && press_key != 'F'));
 
 }
-
+// Manage AI's input
 void aiMove(char board[5][5], char ai, char player, int& row, int& column, int moves)
 {
 	findBestPosition(board, ai, player, row, column, moves);
 	board[row][column] = ai;
 	searchEmptyCell(board, row, column);
 }
-
+// Based on Minimax Algorithm this function defines value for maximizer and minimizer 
 void findBestPosition(char board[5][5], char ai, char player, int& row, int& column, int moves)
  {
 	int bestVal = -1000;
@@ -515,7 +512,7 @@ void findBestPosition(char board[5][5], char ai, char player, int& row, int& col
 			}
 		}
 }
-
+// This will return the best possible move for the AI
 int evaluate(char board[5][5], char ai, char player)
 {
 	// Checking for Rows and Columns for X or O victory. 
@@ -567,7 +564,9 @@ int evaluate(char board[5][5], char ai, char player)
 
 	return 0;
 }
-
+// This is the minimax function. It considers all 
+// the possible ways the game can go and returns 
+// the value of the board 
 int minimax(char board[5][5], char ai, char player, int moves, bool isMax)
 {
 	int score = evaluate(board, ai, player);
